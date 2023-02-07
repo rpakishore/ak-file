@@ -36,12 +36,12 @@ Exists          : False
         return self.filepath.name
 
     @property
-    def parent(self) -> str:
+    def parent(self) -> Path:
         "Returns the file directory from the current self.filepath"
         return self.filepath.absolute().parent
     
     @property
-    def abspath(self) -> str:
+    def abspath(self) -> Path:
         "Returns absolute path of the current file"
         return self.filepath.absolute()
 
