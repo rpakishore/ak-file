@@ -23,21 +23,21 @@
 <h2>Table of Contents</h2>
 
 - [1. About the Project](#1-about-the-project)
-  - [1.2. Features](#12-features)
+  - [1.1. Features](#11-features)
 - [2. Getting Started](#2-getting-started)
-  - [2.2. Dependencies](#22-dependencies)
-  - [2.3. Installation](#23-installation)
+  - [2.1. Dependencies](#21-dependencies)
+  - [2.2. Installation](#22-installation)
 - [3. Usage](#3-usage)
-- [8. License](#8-license)
-- [9. Contact](#9-contact)
-- [10. Acknowledgements](#10-acknowledgements)
+- [4. License](#4-license)
+- [5. Contact](#5-contact)
+- [6. Acknowledgements](#6-acknowledgements)
 
 <!-- About the Project -->
 ## 1. About the Project
 A base project to simplify file manipulation
 
 <!-- Features -->
-### 1.2. Features
+### 1.1. Features
 
 - Can sanitize filename based on windows limitaions
 - Can search for and return files with specified filenames
@@ -45,11 +45,11 @@ A base project to simplify file manipulation
 <!-- Getting Started -->
 ## 2. Getting Started
 
-### 2.2. Dependencies
+### 2.1. Dependencies
 The repo comes pre-compiled with all dependencies.
 
 <!-- Installation -->
-### 2.3. Installation
+### 2.2. Installation
 
 Install my-project with npm
 
@@ -85,11 +85,11 @@ find_files_w_extension(folder_path="Folder\path", extension="py", search_subdir=
 ```
 
 <!-- License -->
-## 8. License
+## 4. License
 See LICENSE.txt for more information.
 
 <!-- Contact -->
-## 9. Contact
+## 5. Contact
 
 Arun Kishore - [@rpakishore](mailto:pypi@rpakishore.co.in)
 
@@ -97,7 +97,7 @@ Project Link: [https://github.com/rpakishore/](https://github.com/rpakishore/)
 
 
 <!-- Acknowledgments -->
-## 10. Acknowledgements
+## 6. Acknowledgements
 
 Use this section to mention useful resources and libraries that you have used in your projects.
 
