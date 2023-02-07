@@ -17,6 +17,7 @@
 </div>
 <br />
 
+[![tests](https://github.com/rpakishore/ak-file/actions/workflows/test.yml/badge.svg)](https://github.com/rpakishore/ak-file/actions/workflows/test.yml)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/rpakishore/ak-file)
 ![GitHub last commit](https://img.shields.io/github/last-commit/rpakishore/ak-file)
 <!-- Table of Contents -->
