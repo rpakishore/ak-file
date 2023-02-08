@@ -52,7 +52,7 @@ The repo comes pre-compiled with all dependencies.
 <!-- Installation -->
 ### 2.2. Installation
 
-Install my-project with npm
+Install from pypi
 
 ```bash
 python -m venv .venv
@@ -81,8 +81,8 @@ sanitize("Dirty_windows_file_name.ext")
 
 To search for files with extension
 ```python
-from ak_file import find_files_w_extension
-find_files_w_extension(folder_path="Folder\path", extension="py", search_subdir=True)
+from ak_file import search
+search.by_extension(folder_path="Folder\path", extension="py", search_subdir=True)
 ```
 
 <!-- License -->
@@ -94,7 +94,7 @@ See LICENSE.txt for more information.
 
 Arun Kishore - [@rpakishore](mailto:pypi@rpakishore.co.in)
 
-Project Link: [https://github.com/rpakishore/](https://github.com/rpakishore/)
+Project Link: [https://github.com/rpakishore/ak-file](https://github.com/rpakishore/ak-file)
 
 
 <!-- Acknowledgments -->
