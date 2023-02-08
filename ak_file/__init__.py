@@ -1,6 +1,6 @@
 """ File Parsing function
 """
-__version__ = "0.0.2"
+__version__ = "0.0.3"
 
 from ak_file.main import File
 from ak_file import search
