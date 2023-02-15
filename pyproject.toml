@@ -10,8 +10,7 @@ license = {file = "LICENSE"}
 classifiers = ["License :: OSI Approved :: MIT License"]
 dynamic = ["version", "description"]
 dependencies = [
-    "pytest>=7.2.1",
-    "python-docx>=0.8.11"
+    "pytest>=7.2.1"
 ]
 
 [project.urls]
