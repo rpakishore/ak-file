@@ -1,4 +1,5 @@
-import unicodedata, re
+import unicodedata
+import re
 
 blacklist = ["\\", "/", ":", "*", "?", "\"", "<", ">", "|", "\0"]
 

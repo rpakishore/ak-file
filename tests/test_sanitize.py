@@ -1,4 +1,4 @@
-from ak_file.sanitize import *
+from ak_file.sanitize import sanitize, reserved
 
 def test_blacklist():
     assert sanitize("a\\b/c:d*e?f\"g<h>i|j\0k") == "abcdefghijk"
