@@ -26,8 +26,16 @@ def sanitize(filename:str) -> str:
     filename = filename.strip()
     if all([x == "." for x in filename]):
         filename = "__" + filename
+
+    parts = re.split(r"/|\\", filename)[-1].split(".")
+    ext=''
+    if len(parts) > 1:
+        ext = "." + parts.pop()
+        filename = filename[:-len(ext)]
     if filename in reserved:
         filename = "__" + filename
+    filename = filename + ext
+
     if len(filename) == 0:
         filename = "__"
     if len(filename) > 255:

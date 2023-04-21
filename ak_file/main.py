@@ -50,7 +50,7 @@ Exists          : False
         new_filepath = self.filepath.parent / new_filename
         if rename_file and self.exists():
             self.filepath.rename(new_filepath)
-        self.filepath = new_filepath
+            self.filepath = new_filepath
         return self.name
     
     def is_file(self) -> bool:
