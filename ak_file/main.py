@@ -3,6 +3,7 @@
 
 from time import ctime
 from pathlib import Path
+from functools import cached_property
 
 class File:
     def __init__(self, filepath: str)-> None:
@@ -11,25 +12,39 @@ class File:
     def __str__(self) -> str:
         file_prop = self.get_file_properties()
         if self.exists():
-            return f"""
-Name        : {self.name}
-Directory   : {self.parent}
-Exists          : True
-Access Time     : {file_prop["Access Time"]}
-Modified Time   : {file_prop["Modified Time"]}
-Change Time     : {file_prop["Change Time"]}
-Size            : {file_prop["Size_B"]/1024:.2f} KB
-            """
+            return (
+                f'Name        : {self.name}',
+                f'Directory   : {self.parent}',
+                'Exists          : True',
+                f'Access Time     : {file_prop["Access Time"]}',
+                f'Modified Time   : {file_prop["Modified Time"]}',
+                f'Change Time     : {file_prop["Change Time"]}',
+                f'Size            : {file_prop["Size_B"]/1024:.2f} KB',
+            )
         else:
-            return f"""
-Name        : {self.name}
-Directory   : {self.parent}
-Exists          : False
-            """
+            return (
+                f'Name        : {self.name}',
+                f'Directory   : {self.parent}',
+                'Exists          : False',
+            )
 
     def __repr__(self) -> str:
         return f'File(filepath="{self.filepath}")'
+    
+    def __del__(self) -> bool:
+        if self.filepath.exists():
+            self.filepath.unlink()
+            return True
+        else:
+            return False
 
+    @cached_property
+    def stat(self):
+        if self.exists():
+            return self.filepath.stat()
+        else:
+            return None
+    
     @property
     def name(self) -> str:
         "Returns the filename from the current self.filepath"
@@ -56,25 +71,71 @@ Exists          : False
     def is_file(self) -> bool:
         return self.filepath.is_file()
 
-    def is_dir(self) -> bool:
-        return self.filepath.is_dir()
-
     def exists(self) -> bool:
-        return self.filepath.is_file() or self.filepath.is_dir()
+        return self.filepath.is_file()
+    
+    @property
+    def atime(self):
+        return self.stat.st_atime if self.stat else None
+    
+    @property
+    def ctime(self):
+        return self.stat.st_ctime if self.stat else None
+    
+    @property
+    def mtime(self):
+        return self.stat.st_mtime if self.stat else None
+    
+    def __len__(self) -> int:
+        if self.exists():
+            return self.stat.st_size
+        else:
+            return 0
 
     def properties(self) -> dict:
         "Returns a dict of properties of the file"
-        stat = self.filepath.stat() if self.exists() else None
+        stat = self.stat if self.exists() else None
         return {
             "name": self.name,
             "dir": self.parent,
             "exists": self.exists(),
-            "Access Time": ctime(stat.st_atime) if stat else None,
-            "Modified Time": ctime(stat.st_mtime) if stat else None,
-            "Change Time" : ctime(stat.st_ctime) if stat else None,
+            "Access Time": ctime(self.atime) if stat else None,
+            "Modified Time": ctime(self.mtime) if stat else None,
+            "Change Time" : ctime(self.ctime) if stat else None,
             "Size_B": stat.st_size if stat else None
         }
 
+    def __gt__(self, other):
+        if isinstance(other, File):
+            return len(self) > len(other)
+        elif type(other) in (int, float):
+            return len(self) > other
+        else:
+            raise TypeError(f"Unsupported comparison between instances of 'File' and '{other.__class__.__name__}'")
+
+    def __lt__(self, other):
+        if isinstance(other, File):
+            return len(self) < other.value
+        elif type(other) in (int, float):
+            return len(self) < other
+        else:
+            raise TypeError(f"Unsupported comparison between instances of 'File' and '{other.__class__.__name__}'")
+
+    def __ge__(self, other):
+        if isinstance(other, File):
+            return len(self) >= len(other)
+        elif type(other) in (int, float):
+            return len(self) >= other
+        else:
+            raise TypeError(f"Unsupported comparison between instances of 'File' and '{other.__class__.__name__}'")
+
+    def __le__(self, other):
+        if isinstance(other, File):
+            return len(self) <= other.value
+        elif type(other) in (int, float):
+            return len(self) <= other
+        else:
+            raise TypeError(f"Unsupported comparison between instances of 'File' and '{other.__class__.__name__}'")
 
 
 
