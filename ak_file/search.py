@@ -22,7 +22,8 @@ class SearchFolder:
 
         Args:
             directory (Path): The directory to search in.
-            condition (Callable[[Path], bool]): A function that takes a Path object and returns a boolean.
+            condition (Callable[[Path], bool]): A function that takes a Path object \
+                and returns a boolean.
 
         Yields:
             Path: Path objects for files that satisfy the condition.
@@ -43,7 +44,8 @@ class SearchFolder:
         """
         return self.search(lambda file: min_size <= file.stat().st_size <= max_size)
 
-    def modification_date(self, start_date: datetime, end_date: datetime) -> Generator[Path, None, None]:
+    def modification_date(self, start_date: datetime, 
+                            end_date: datetime) -> Generator[Path, None, None]:
         """Search for files modified within a specific date range.
 
         Args:
@@ -53,19 +55,21 @@ class SearchFolder:
         Yields:
             Path: Path objects for files modified within the specified date range.
         """
-        return self.search(lambda file: start_date <= datetime.fromtimestamp(file.stat().st_mtime) <= end_date)
+        return self.search(lambda file: start_date <= datetime.fromtimestamp(file.stat().st_mtime) <= end_date)  # noqa: E501
     
-    def regex(self, pattern: str, case_sensitive:bool=False) -> Generator[Path, None, None]:
+    def regex(self, pattern: str, 
+                case_sensitive:bool=False) -> Generator[Path, None, None]:
         """
         Search for files in a directory that match a regex pattern.
 
         Args:
             pattern (str): The regex pattern to match.
-            case_sensitive (bool, optional): Whether the search should be case sensitive. \
-                Defaults to False.
+            case_sensitive (bool, optional): Whether the search should be case \
+                sensitive. Defaults to False.
 
         Returns:
-            list[Path]: A list of Path objects for the files that match the regex pattern.
+            list[Path]: A list of Path objects for the files that match the \
+                regex pattern.
         """
         if (not case_sensitive) and (not pattern.startswith("(?i)")):
             pattern = "(?i)" + pattern
@@ -80,8 +84,8 @@ class SearchFolder:
             extension_str (str): The file extension to match.
 
         Returns:
-            Generator[Path, None, None]: A generator yielding Path objects for the files \
-                that match the extension.
+            Generator[Path, None, None]: A generator yielding Path objects for the \
+                files that match the extension.
         """
         return self.folderpath.glob(f"{'**/' if self.recurse else ''}*.{extension_str}")
     
