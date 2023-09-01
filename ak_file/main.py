@@ -4,6 +4,7 @@
 from time import ctime
 from pathlib import Path
 from functools import cached_property
+import hashlib
 
 class File:
     def __init__(self, filepath: str)-> None:
@@ -28,6 +29,15 @@ class File:
                 'Exists          : False',
             )
 
+    @property
+    def hash(self) -> str:
+        if self.filepath.exists():
+            with open(self.filepath, 'rb') as f:
+                _data: bytes = f.read()
+            return hashlib.md5(_data).hexdigest()
+        else:
+            raise Exception(f"{self.filepath} does not exist.")
+            
     def __repr__(self) -> str:
         return f'File(filepath="{self.filepath}")'
     
@@ -59,6 +69,9 @@ class File:
     def abspath(self) -> Path:
         "Returns absolute path of the current file"
         return self.filepath.absolute()
+    
+    def __abs__(self):
+        return self.filepath.absolute()
 
     def update_filename(self, new_filename:str, rename_file: bool = False) -> str:
         "Updates the filepath of the stored file"
@@ -86,12 +99,6 @@ class File:
     def mtime(self):
         return self.stat.st_mtime if self.stat else None
     
-    def __len__(self) -> int:
-        if self.exists():
-            return self.stat.st_size
-        else:
-            return 0
-
     def properties(self) -> dict:
         "Returns a dict of properties of the file"
         stat = self.stat if self.exists() else None
@@ -104,14 +111,20 @@ class File:
             "Change Time" : ctime(self.ctime) if stat else None,
             "Size_B": stat.st_size if stat else None
         }
-
+        
+    def __len__(self) -> int:
+        if self.exists():
+            return self.stat.st_size
+        else:
+            return 0
+        
     def __gt__(self, other):
         if isinstance(other, File):
             return len(self) > len(other)
         elif type(other) in (int, float):
             return len(self) > other
         else:
-            raise TypeError(f"Unsupported comparison between instances of 'File' and '{other.__class__.__name__}'")
+            raise TypeError(f"Unsupported comparison between instances of 'File' and '{other.__class__.__name__}'")  # noqa: E501
 
     def __lt__(self, other):
         if isinstance(other, File):
@@ -119,7 +132,7 @@ class File:
         elif type(other) in (int, float):
             return len(self) < other
         else:
-            raise TypeError(f"Unsupported comparison between instances of 'File' and '{other.__class__.__name__}'")
+            raise TypeError(f"Unsupported comparison between instances of 'File' and '{other.__class__.__name__}'")  # noqa: E501
 
     def __ge__(self, other):
         if isinstance(other, File):
@@ -127,7 +140,7 @@ class File:
         elif type(other) in (int, float):
             return len(self) >= other
         else:
-            raise TypeError(f"Unsupported comparison between instances of 'File' and '{other.__class__.__name__}'")
+            raise TypeError(f"Unsupported comparison between instances of 'File' and '{other.__class__.__name__}'")  # noqa: E501
 
     def __le__(self, other):
         if isinstance(other, File):
@@ -135,10 +148,12 @@ class File:
         elif type(other) in (int, float):
             return len(self) <= other
         else:
-            raise TypeError(f"Unsupported comparison between instances of 'File' and '{other.__class__.__name__}'")
+            raise TypeError(f"Unsupported comparison between instances of 'File' and '{other.__class__.__name__}'")  # noqa: E501
 
-
-
-
-
-
+    def __eq__(self, other):
+        if isinstance(other, File):
+            return self.hash == other.hash
+        elif isinstance(other, str):
+            return self.hash == other
+        else:
+            raise TypeError(f"Unsupported comparison between instances of 'File' and '{other.__class__.__name__}'")  # noqa: E501
