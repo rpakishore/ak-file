@@ -37,6 +37,7 @@ class File:
             return hashlib.md5(_data).hexdigest()
         else:
             raise Exception(f"{self.filepath} does not exist.")
+
             
     def __repr__(self) -> str:
         return f'File(filepath="{self.filepath}")'
@@ -155,5 +156,7 @@ class File:
             return self.hash == other.hash
         elif isinstance(other, str):
             return self.hash == other
+        elif isinstance(other, int):
+            return len(self) == other
         else:
             raise TypeError(f"Unsupported comparison between instances of 'File' and '{other.__class__.__name__}'")  # noqa: E501
