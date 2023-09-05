@@ -6,12 +6,15 @@ MAX_FILENAME_LENGTH: int = 255
 MAX_EXTENSION_LENGTH: int = 254
 MIN_ASCII_VALUE: int = 32
 
-def sanitize(filename:str) -> str:
+def sanitize(filename:str, strict: bool = True) -> str:
     """Return a fairly safe version of the filename.
     """
-    filepath: Path = Path(filename)
-    filedir: Path = filepath.parent
-    filename = filepath.name
+    if not strict:
+        filepath: Path = Path(filename)
+        filedir: Path = filepath.parent
+        filename = filepath.name
+    else:
+        filedir = Path()
     
     filename = remove_blacklisted_characters(filename)
     filename = remove_chars_below_code_point(filename, MIN_ASCII_VALUE)
@@ -20,8 +23,9 @@ def sanitize(filename:str) -> str:
     filename = handle_reserved(filename)
     filename = handle_max_length(filename, ext, 
                                     MAX_FILENAME_LENGTH, MAX_EXTENSION_LENGTH)
-    filepath = filedir / filename
-    return str(filepath)
+
+    return str(filedir / filename)
+
 
 def remove_blacklisted_characters(filename: str) -> str:
     """Remove blacklisted characters from the filename."""
