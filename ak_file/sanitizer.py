@@ -14,7 +14,7 @@ def sanitize(filename:str, strict: bool = True) -> str:
         filedir: Path = filepath.parent
         filename = filepath.name
     else:
-        filedir = Path()
+        filedir: Path = Path()
     
     filename = remove_blacklisted_characters(filename)
     filename = remove_chars_below_code_point(filename, MIN_ASCII_VALUE)
