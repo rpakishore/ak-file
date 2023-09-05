@@ -11,22 +11,22 @@ class File:
         self.filepath=Path(str(filepath))
 
     def __str__(self) -> str:
-        file_prop = self.get_file_properties()
+        file_prop: dict = self.properties
         if self.exists():
             return (
-                f'Name        : {self.name}',
-                f'Directory   : {self.parent}',
-                'Exists          : True',
-                f'Access Time     : {file_prop["Access Time"]}',
-                f'Modified Time   : {file_prop["Modified Time"]}',
-                f'Change Time     : {file_prop["Change Time"]}',
-                f'Size            : {file_prop["Size_B"]/1024:.2f} KB',
+                f'Name        : {self.name}'
+                f'\nDirectory   : {self.parent}'
+                '\nExists          : True'
+                f'\nAccess Time     : {file_prop["Access Time"]}'
+                f'\nModified Time   : {file_prop["Modified Time"]}'
+                f'\nChange Time     : {file_prop["Change Time"]}'
+                f'\nSize            : {file_prop["Size_B"]/1024:.2f} KB'
             )
         else:
             return (
-                f'Name        : {self.name}',
-                f'Directory   : {self.parent}',
-                'Exists          : False',
+                f'Name        : {self.name}'
+                f'\nDirectory   : {self.parent}'
+                '\nExists          : False'
             )
 
     @property
@@ -71,7 +71,7 @@ class File:
         "Returns absolute path of the current file"
         return self.filepath.absolute()
     
-    def __abs__(self):
+    def __abs__(self) -> Path:
         return self.filepath.absolute()
 
     def update_filename(self, new_filename:str, rename_file: bool = False) -> str:
@@ -89,17 +89,18 @@ class File:
         return self.filepath.is_file()
     
     @property
-    def atime(self):
+    def atime(self) -> float|None:
         return self.stat.st_atime if self.stat else None
     
     @property
-    def ctime(self):
+    def ctime(self) -> float|None:
         return self.stat.st_ctime if self.stat else None
     
     @property
-    def mtime(self):
+    def mtime(self) -> float|None:
         return self.stat.st_mtime if self.stat else None
     
+    @property
     def properties(self) -> dict:
         "Returns a dict of properties of the file"
         stat = self.stat if self.exists() else None
@@ -114,12 +115,14 @@ class File:
         }
         
     def __len__(self) -> int:
-        if self.exists():
+        """Returns size of file in Bytes
+        """
+        if self.exists() and self.stat:
             return self.stat.st_size
         else:
             return 0
         
-    def __gt__(self, other):
+    def __gt__(self, other) -> bool:
         if isinstance(other, File):
             return len(self) > len(other)
         elif type(other) in (int, float):
@@ -127,15 +130,15 @@ class File:
         else:
             raise TypeError(f"Unsupported comparison between instances of 'File' and '{other.__class__.__name__}'")  # noqa: E501
 
-    def __lt__(self, other):
+    def __lt__(self, other) -> bool:
         if isinstance(other, File):
-            return len(self) < other.value
+            return len(self) < len(other)
         elif type(other) in (int, float):
             return len(self) < other
         else:
             raise TypeError(f"Unsupported comparison between instances of 'File' and '{other.__class__.__name__}'")  # noqa: E501
 
-    def __ge__(self, other):
+    def __ge__(self, other) -> bool:
         if isinstance(other, File):
             return len(self) >= len(other)
         elif type(other) in (int, float):
@@ -143,15 +146,15 @@ class File:
         else:
             raise TypeError(f"Unsupported comparison between instances of 'File' and '{other.__class__.__name__}'")  # noqa: E501
 
-    def __le__(self, other):
+    def __le__(self, other) -> bool:
         if isinstance(other, File):
-            return len(self) <= other.value
+            return len(self) <= len(other)
         elif type(other) in (int, float):
             return len(self) <= other
         else:
             raise TypeError(f"Unsupported comparison between instances of 'File' and '{other.__class__.__name__}'")  # noqa: E501
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         if isinstance(other, File):
             return self.hash == other.hash
         elif isinstance(other, str):

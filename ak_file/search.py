@@ -6,15 +6,15 @@ from datetime import datetime
 class SearchFolder:
     
     def __init__(self, folder_path: str|Path, recurse: bool) -> None:
-        self.folderpath = Path(str(folder_path))
+        self.folderpath: Path = Path(str(folder_path))
         self.recurse = recurse
-        if not folder_path.exists() or not folder_path.is_dir():
+        if not self.folderpath.exists() or not self.folderpath.is_dir():
             raise ValueError(f"{folder_path} does not exist or is not a directory.")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Search in the directory: {self.folderpath}, Recurse = {self.recurse}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"Search('{self.folderpath}', {self.recurse})"
     
     def search(self, condition: Callable[[Path], bool]) -> Generator[Path, None, None]:
@@ -74,7 +74,7 @@ class SearchFolder:
         if (not case_sensitive) and (not pattern.startswith("(?i)")):
             pattern = "(?i)" + pattern
         regex = re.compile(pattern)
-        return self.search(lambda file: regex.search(file.name))
+        return self.search(lambda file: regex.search(file.name) is not None)
 
     def extension(self, extension_str: str) -> Generator[Path, None, None]:
         """

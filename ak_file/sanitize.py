@@ -2,15 +2,15 @@ import unicodedata
 import re
 from pathlib import Path
 
-MAX_FILENAME_LENGTH = 255
-MAX_EXTENSION_LENGTH = 254
-MIN_ASCII_VALUE = 32
+MAX_FILENAME_LENGTH: int = 255
+MAX_EXTENSION_LENGTH: int = 254
+MIN_ASCII_VALUE: int = 32
 
 def sanitize(filename:str) -> str:
     """Return a fairly safe version of the filename.
     """
     filepath: Path = Path(filename)
-    filedir: Path = filename.parent
+    filedir: Path = filepath.parent
     filename = filepath.name
     
     filename = remove_blacklisted_characters(filename)
