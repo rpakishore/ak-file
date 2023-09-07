@@ -35,6 +35,7 @@
 
 <!-- About the Project -->
 ## 1. About the Project
+
 A base project to simplify file manipulation
 
 <!-- Features -->
@@ -47,7 +48,8 @@ A base project to simplify file manipulation
 ## 2. Getting Started
 
 ### 2.1. Dependencies
-The repo comes pre-compiled with all dependencies.
+
+The repo comes pre-compiled with all dependencies. Needs Python 3.11+
 
 <!-- Installation -->
 ### 2.2. Installation
@@ -55,12 +57,9 @@ The repo comes pre-compiled with all dependencies.
 Install from pypi
 
 ```bash
-python -m venv .venv
-
-venv\Scripts\activate.bat
-
 pip install ak_file
 ```
+
 <!-- Usage -->
 ## 3. Usage
 
@@ -68,26 +67,28 @@ pip install ak_file
 ```python
 import ak_file
 file = ak_file.File("<path/to/file>")
+
 file.exists()
 
 file.properties()
-```
 
-To sanitize filename
-```python
-from ak_file import sanitize
-sanitize("Dirty_windows_file_name.ext")
-```
+# To sanitize filename
+from ak_file import sanitizer
+sanitizer.sanitize("Dirty_windows_file_name.ext")
 
-To search for files with extension
-```python
+# Obfuscate/Unobfuscate filename with simple char shift
+sanitizer.obfuscate('Filename to obfuscate') #'WzCvErDvqKFqFswLJtrKv'
+sanitizer.obfuscate('Filename to obfuscate') #'Filename to obfuscate'
+
+# To search for files with extension
 from ak_file import search
 search.by_extension(folder_path="Folder\path", extension="py", search_subdir=True)
 ```
 
 <!-- License -->
 ## 4. License
-See LICENSE.txt for more information.
+
+See LICENSE for more information.
 
 <!-- Contact -->
 ## 5. Contact
@@ -100,9 +101,5 @@ Project Link: [https://github.com/rpakishore/ak-file](https://github.com/rpakish
 <!-- Acknowledgments -->
 ## 6. Acknowledgements
 
-Use this section to mention useful resources and libraries that you have used in your projects.
-
- - [Awesome README Template](https://github.com/Louis3797/awesome-readme-template/blob/main/README-WITHOUT-EMOJI.md)
- - [Banner Maker](https://banner.godori.dev/)
- - [Shields.io](https://shields.io/)
- - [Carbon](https://carbon.now.sh/)
+- [Awesome README Template](https://github.com/Louis3797/awesome-readme-template/blob/main/README-WITHOUT-EMOJI.md)
+- [Shields.io](https://shields.io/)
