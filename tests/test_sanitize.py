@@ -1,11 +1,11 @@
-from ak_file.sanitizer import (sanitize, remove_blacklisted_characters, 
-                                remove_chars_below_code_point)
+from ak_file.sanitizer import (sanitize, _remove_blacklisted_characters, 
+                                _remove_chars_below_code_point, obfuscate, unobfuscate)
 
 def test_remove_blacklisted_characters():
-    assert remove_blacklisted_characters("a\\b/c:d*e?f\"g<h>i|j\0k") == "abcdefghijk"
+    assert _remove_blacklisted_characters("a\\b/c:d*e?f\"g<h>i|j\0k") == "abcdefghijk"
 
 def test_remove_chars_below_code_point():
-    assert remove_chars_below_code_point("abc\x1fdef", 32) == "abcdef"
+    assert _remove_chars_below_code_point("abc\x1fdef", 32) == "abcdef"
     
 def test_length():
     assert len(sanitize("gradsf"*250)) == 255
@@ -31,3 +31,11 @@ def test_sanitize():
     assert sanitize("a" * 300) == "a" * 255
     
     assert sanitize("") == '__'
+
+def test_obfuscate():
+    assert obfuscate('Filename to obfuscate') == 'WzCvErDvqKFqFswLJtrKv'
+    assert obfuscate('This is a test file 1243, ??;', shift_val=23) == 'eEFPwFPwxwQBPQwCFIBwmnpo,w??;'
+
+def test_unobfuscate():
+    assert unobfuscate('WzCvErDvqKFqFswLJtrKv') == 'Filename to obfuscate'
+    assert unobfuscate('eEFPwFPwxwQBPQwCFIBwmnpo,w??;', shift_val=23) == 'This is a test file 1243, ??;'
