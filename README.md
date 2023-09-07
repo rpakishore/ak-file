@@ -68,17 +68,20 @@ pip install ak_file
 import ak_file
 file = ak_file.File("<path/to/file>")
 
-file.exists()
+file.exists() # Returns bool
+file.properties() # Returns dict
 
-file.properties()
+file.encrypt(password = 'Some Fancy Password') # Returns bytes data
+file._DEFAULT_SALT = b'SuperSecureSaltForEncryption' # Change default encryption salt
+file.decrypt(password = 'Some Fancy Password') # Returns bytes data
 
 # To sanitize filename
 from ak_file import sanitizer
 sanitizer.sanitize("Dirty_windows_file_name.ext")
 
 # Obfuscate/Unobfuscate filename with simple char shift
-sanitizer.obfuscate('Filename to obfuscate') #'WzCvErDvqKFqFswLJtrKv'
-sanitizer.obfuscate('Filename to obfuscate') #'Filename to obfuscate'
+sanitizer.obfuscate('Filename to obfuscate') # Returns 'WzCvErDvqKFqFswLJtrKv'
+sanitizer.unobfuscate('WzCvErDvqKFqFswLJtrKv') # Returns 'Filename to obfuscate'
 
 # To search for files with extension
 from ak_file import search

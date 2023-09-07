@@ -5,8 +5,14 @@ from time import ctime
 from pathlib import Path
 from functools import cached_property
 import hashlib
+from cryptography.fernet import Fernet
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+import base64
 
 class File:
+    _DEFAULT_SALT = b'salt_^h.W#(e6-OHplcig:?6@+((8{_f2skE'
+    
     def __init__(self, filepath: str)-> None:
         self.filepath=Path(str(filepath))
 
@@ -102,7 +108,7 @@ class File:
     
     @property
     def properties(self) -> dict:
-        "Returns a dict of properties of the file"
+        """Returns a dict of properties of the file"""
         stat = self.stat if self.exists() else None
         return {
             "name": self.name,
@@ -115,8 +121,7 @@ class File:
         }
         
     def __len__(self) -> int:
-        """Returns size of file in Bytes
-        """
+        """Returns size of file in Bytes"""
         if self.exists() and self.stat:
             return self.stat.st_size
         else:
@@ -163,3 +168,43 @@ class File:
             return len(self) == other
         else:
             raise TypeError(f"Unsupported comparison between instances of 'File' and '{other.__class__.__name__}'")  # noqa: E501
+
+    def encrypt(self, key: str='') -> bytes|None:
+        """Encrypts the content of the file"""
+        content = self.content
+        if content:
+            fernet = _generate_key(password = key, salt=self._DEFAULT_SALT)
+            return fernet.encrypt(content)
+        else: 
+            return None
+    
+    def decrypt(self, key: str='') -> bytes|None:
+        """Decrypts the content of the file"""
+        content = self.content
+        if content:
+            fernet = _generate_key(password = key, salt=self._DEFAULT_SALT)
+            return fernet.decrypt(content)
+        else: 
+            return None
+    
+    @property
+    def content(self) -> bytes | None:
+        if self.exists() is None:
+            return None
+        else:
+            with open(self.filepath, 'rb') as f:
+                return f.read()
+        
+def _generate_key(password: str, salt: bytes) -> Fernet:
+    """
+    Generates a key from the given password and returns it.
+    """
+    password_bytes: bytes = bytes(password, 'utf-8')
+    kdf = PBKDF2HMAC(
+        algorithm=hashes.SHA256(),
+        length=32,
+        salt=salt,
+        iterations=390000,
+        )
+    key = base64.urlsafe_b64encode(kdf.derive(password_bytes))
+    return Fernet(key)

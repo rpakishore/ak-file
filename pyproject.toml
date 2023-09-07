@@ -5,12 +5,18 @@ build-backend = "flit_core.buildapi"
 [project]
 name = "ak_file"
 authors = [{name = "Arun Kishore", email = "pypi@rpakishore.co.in"}]
+requires-python = ">=3.11.0"
 readme = "README.md"
 license = {file = "LICENSE"}
 classifiers = ["License :: OSI Approved :: MIT License"]
 dynamic = ["version", "description"]
 dependencies = [
-    "pytest>=7.2.1"
+    "cryptography>=41.0.3"
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest"
 ]
 
 [project.urls]
