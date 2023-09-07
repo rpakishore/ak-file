@@ -1,6 +1,5 @@
 <!--- Heading --->
 <div align="center">
-  <img src="assets/banner.png" alt="banner" width="auto" height="auto" />
   <h1>ak-file</h1>
   <p>
     A base module to manipulate files and folders
