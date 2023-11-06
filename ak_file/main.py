@@ -55,7 +55,7 @@ class File:
         else:
             return False
 
-    @cached_property
+    @property
     def stat(self):
         if self.exists():
             return self.filepath.stat()
