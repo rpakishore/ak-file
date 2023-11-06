@@ -19,5 +19,9 @@ test = [
     "pytest"
 ]
 
+dev = [
+    "ipykernel"
+]
+
 [project.urls]
 Home = "https://github.com/rpakishore/ak-file"
