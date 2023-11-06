@@ -63,10 +63,9 @@ pip install ak_file
 <!-- Usage -->
 ## 3. Usage
 
-
 ```python
-import ak_file
-file = ak_file.File("<path/to/file>")
+import ak_file import File
+file = File("<path/to/file>")
 
 file.exists() # Returns bool
 file.properties() # Returns dict
@@ -77,15 +76,23 @@ file.decrypt(password = 'Some Fancy Password') # Returns bytes data
 
 # To sanitize filename
 from ak_file import sanitizer
-sanitizer.sanitize("Dirty_windows_file_name.ext")
+sanitizer.sanitize("Dirty_windows_file_name.ext", strict=False)
 
 # Obfuscate/Unobfuscate filename with simple char shift
 sanitizer.obfuscate('Filename to obfuscate') # Returns 'WzCvErDvqKFqFswLJtrKv'
 sanitizer.unobfuscate('WzCvErDvqKFqFswLJtrKv') # Returns 'Filename to obfuscate'
 
-# To search for files with extension
-from ak_file import search
-search.by_extension(folder_path="Folder\path", extension="py", search_subdir=True)
+# Search
+from ak_file import SearchFolder
+search = SearchFolder(folder_path="Folder\path", recurse=True)
+
+search.extension(extension_str='py') # by extension
+search.size(min_size=1024, max_size=2048) # Bytes; by size
+search.regex(pattern=r'[A-Z]{3}\.py', case_sensitive=False) # By regex
+search.modification_date(start_date=datetime(2023,01,01), end_date=datetime(2023,10,10))
+
+## search by generic function
+search.search(condition=lambda file: 'Alpha' in file.parent)
 ```
 
 ## 4. Roadmap
