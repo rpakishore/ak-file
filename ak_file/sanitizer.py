@@ -18,8 +18,9 @@ def sanitize(filename:str, strict: bool = True) -> str:
         filedir: Path = Path()
     
     filename = _remove_blacklisted_characters(filename)
-    filename = _remove_chars_below_code_point(filename, MIN_ASCII_VALUE)
     filename = _normalize_filename(filename)
+    filename = _replace_whitespace(filename)
+    filename = _remove_chars_below_code_point(filename, MIN_ASCII_VALUE)
     filename, ext = _handle_extension(filename)
     filename = _handle_reserved(filename)
     filename = _handle_max_length(filename, ext, 
@@ -27,6 +28,8 @@ def sanitize(filename:str, strict: bool = True) -> str:
 
     return str(filedir / filename)
 
+def _replace_whitespace(filename: str) -> str:
+    return re.sub(r"\s+", '_', filename)
 
 def _remove_blacklisted_characters(filename: str) -> str:
     """Remove blacklisted characters from the filename."""
@@ -67,11 +70,10 @@ def _handle_max_length(filename: str, ext: str, max_filename_length: int,
     if len(filename) > max_filename_length:
         if len(ext) > max_extension_length:
             ext = ext[max_extension_length:]
-        maxl = max_filename_length - len(ext)
-        filename = filename[:maxl] + ext
-        filename = filename.rstrip(". ")
+        maxl: int = max_filename_length - len(ext)
+        filename = filename[:maxl]
         filename = "__" if len(filename) == 0 else filename
-    return filename
+    return filename + ext
 
 def _stringshift(stringlist: str, shift: int) -> str:
     return stringlist[shift:] + stringlist[:shift]

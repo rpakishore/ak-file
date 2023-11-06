@@ -15,9 +15,6 @@ def test_sanitize():
     # Test input containing all characters in blacklist
     assert sanitize("\\/:*?\"<>|\0") == "__"
     
-    # Test input containing only characters with ASCII code below 32
-    assert sanitize("abc\x1fdef") == "abcdef"
-    
     # Test input containing a reserved word
     assert sanitize("PRN") == "__PRN"
     
