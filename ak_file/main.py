@@ -13,8 +13,8 @@ import base64
 class File:
     _DEFAULT_SALT = b'salt_^h.W#(e6-OHplcig:?6@+((8{_f2skE'
     
-    def __init__(self, filepath: str)-> None:
-        self.filepath=Path(str(filepath))
+    def __init__(self, filepath: str|Path)-> None:
+        self.filepath: Path = Path(str(filepath))
 
     def __str__(self) -> str:
         file_prop: dict = self.properties
@@ -160,6 +160,7 @@ class File:
             raise TypeError(f"Unsupported comparison between instances of 'File' and '{other.__class__.__name__}'")  # noqa: E501
 
     def __eq__(self, other) -> bool:
+        """Checks Hash; If int supplied, checks size"""
         if isinstance(other, File):
             return self.hash == other.hash
         elif isinstance(other, str):
@@ -194,6 +195,7 @@ class File:
         else:
             with open(self.filepath, 'rb') as f:
                 return f.read()
+        
         
 def _generate_key(password: str, salt: bytes) -> Fernet:
     """

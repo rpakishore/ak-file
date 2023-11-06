@@ -28,6 +28,7 @@
   - [2.1. Dependencies](#21-dependencies)
   - [2.2. Installation](#22-installation)
 - [3. Usage](#3-usage)
+- [4. Roadmap](#4-roadmap)
 - [4. License](#4-license)
 - [5. Contact](#5-contact)
 - [6. Acknowledgements](#6-acknowledgements)
@@ -86,6 +87,23 @@ sanitizer.unobfuscate('WzCvErDvqKFqFswLJtrKv') # Returns 'Filename to obfuscate'
 from ak_file import search
 search.by_extension(folder_path="Folder\path", extension="py", search_subdir=True)
 ```
+
+## 4. Roadmap
+
+- [ ] Exception Handling
+- [ ] File Operations
+  - [ ] Adding methods to write content to files.
+  - [ ] Methods for appending content to files.
+  - [ ] Support for working with directories: create, remove, list contents, move, etc.
+- [ ] Checksum Algorithms
+- [ ] Metadata Extraction
+- [ ] Support for More Encryption Options
+- [ ] Context Managers
+- [ ] File Comparison Methods
+- [ ] Logging and Debugging
+- [ ] Asynchronous I/O Support
+- [ ] Serialization and Deserialization
+- [ ] Support Different File Types
 
 <!-- License -->
 ## 4. License
