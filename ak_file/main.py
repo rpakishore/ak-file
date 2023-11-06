@@ -3,13 +3,21 @@
 
 from time import ctime
 from pathlib import Path
-from functools import cached_property
 import hashlib
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 import base64
+from datetime import datetime
+from dataclasses import dataclass
 
+@dataclass
+class FileProperties:
+    atime: datetime
+    mtime: datetime
+    ctime: datetime
+    size: int
+    
 class File:
     _DEFAULT_SALT = b'salt_^h.W#(e6-OHplcig:?6@+((8{_f2skE'
     
@@ -17,16 +25,15 @@ class File:
         self.filepath: Path = Path(str(filepath))
 
     def __str__(self) -> str:
-        file_prop: dict = self.properties
-        if self.exists():
+        if props := self.properties:
             return (
-                f'Name        : {self.name}'
-                f'\nDirectory   : {self.parent}'
-                '\nExists          : True'
-                f'\nAccess Time     : {file_prop["Access Time"]}'
-                f'\nModified Time   : {file_prop["Modified Time"]}'
-                f'\nChange Time     : {file_prop["Change Time"]}'
-                f'\nSize            : {file_prop["Size_B"]/1024:.2f} KB'
+                f'Name\t\t: {self.name}'
+                f'\nDirectory\t: {self.parent}'
+                '\nExists\t\t: True'
+                f'\nAccess Time\t: {props.atime:%Y-%m-%d %H:%M:%S}'
+                f'\nModified Time\t: {props.mtime:%Y-%m-%d %H:%M:%S}'
+                f'\nChange Time\t: {props.ctime:%Y-%m-%d %H:%M:%S}'
+                f'\nSize\t\t: {props.size/1024:.2f} KB'
             )
         else:
             return (
@@ -107,18 +114,17 @@ class File:
         return self.stat.st_mtime if self.stat else None
     
     @property
-    def properties(self) -> dict:
+    def properties(self) -> FileProperties|None:
         """Returns a dict of properties of the file"""
-        stat = self.stat if self.exists() else None
-        return {
-            "name": self.name,
-            "dir": self.parent,
-            "exists": self.exists(),
-            "Access Time": ctime(self.atime) if stat else None,
-            "Modified Time": ctime(self.mtime) if stat else None,
-            "Change Time" : ctime(self.ctime) if stat else None,
-            "Size_B": stat.st_size if stat else None
-        }
+        if self.stat:
+            return FileProperties(
+                atime=datetime.fromtimestamp(self.stat.st_atime),
+                mtime=datetime.fromtimestamp(self.stat.st_mtime),
+                ctime=datetime.fromtimestamp(self.stat.st_ctime),
+                size=self.stat.st_size
+            )
+        return None
+
         
     def __len__(self) -> int:
         """Returns size of file in Bytes"""
