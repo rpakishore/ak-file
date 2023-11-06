@@ -20,7 +20,8 @@ test = [
 ]
 
 dev = [
-    "ipykernel"
+    "ipykernel",
+    "icecream"
 ]
 
 [project.urls]
