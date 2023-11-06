@@ -41,16 +41,6 @@ class File:
                 f'\nDirectory   : {self.parent}'
                 '\nExists          : False'
             )
-
-    @property
-    def hash(self) -> str:
-        if self.filepath.exists():
-            with open(self.filepath, 'rb') as f:
-                _data: bytes = f.read()
-            return hashlib.md5(_data).hexdigest()
-        else:
-            raise Exception(f"{self.filepath} does not exist.")
-
             
     def __repr__(self) -> str:
         return f'File(filepath="{self.filepath}")'
@@ -61,71 +51,6 @@ class File:
             return True
         else:
             return False
-
-    @property
-    def stat(self):
-        if self.exists():
-            return self.filepath.stat()
-        else:
-            return None
-    
-    @property
-    def name(self) -> str:
-        "Returns the filename from the current self.filepath"
-        return self.filepath.name
-
-    @property
-    def parent(self) -> Path:
-        "Returns the file directory from the current self.filepath"
-        return self.filepath.absolute().parent
-    
-    @property
-    def abspath(self) -> Path:
-        "Returns absolute path of the current file"
-        return self.filepath.absolute()
-    
-    def __abs__(self) -> Path:
-        return self.filepath.absolute()
-
-    def update_filename(self, new_filename:str, rename_file: bool = False) -> str:
-        "Updates the filepath of the stored file"
-        new_filepath = self.filepath.parent / new_filename
-        if rename_file and self.exists():
-            self.filepath.rename(new_filepath)
-            self.filepath = new_filepath
-        return self.name
-    
-    def is_file(self) -> bool:
-        return self.filepath.is_file()
-
-    def exists(self) -> bool:
-        return self.filepath.is_file()
-    
-    @property
-    def atime(self) -> float|None:
-        return self.stat.st_atime if self.stat else None
-    
-    @property
-    def ctime(self) -> float|None:
-        return self.stat.st_ctime if self.stat else None
-    
-    @property
-    def mtime(self) -> float|None:
-        return self.stat.st_mtime if self.stat else None
-    
-    @property
-    def properties(self) -> FileProperties|None:
-        """Returns a dict of properties of the file"""
-        if self.stat:
-            return FileProperties(
-                atime=datetime.fromtimestamp(self.stat.st_atime),
-                mtime=datetime.fromtimestamp(self.stat.st_mtime),
-                ctime=datetime.fromtimestamp(self.stat.st_ctime),
-                size=self.stat.st_size
-            )
-        return None
-
-        
     def __len__(self) -> int:
         """Returns size of file in Bytes"""
         if self.exists() and self.stat:
@@ -176,9 +101,69 @@ class File:
         else:
             raise TypeError(f"Unsupported comparison between instances of 'File' and '{other.__class__.__name__}'")  # noqa: E501
 
+    def __abs__(self) -> Path:
+        return self.filepath.absolute()
+    
+    @property
+    def hash(self) -> str:
+        if self.filepath.exists():
+            with open(self.filepath, 'rb') as f:
+                _data: bytes = f.read()
+            return hashlib.md5(_data).hexdigest()
+        else:
+            raise Exception(f"{self.filepath} does not exist.")
+        
+    @property
+    def stat(self):
+        if self.exists():
+            return self.filepath.stat()
+        else:
+            return None
+    
+    @property
+    def name(self) -> str:
+        "Returns the filename from the current self.filepath"
+        return self.filepath.name
+
+    @property
+    def parent(self) -> Path:
+        "Returns the file directory from the current self.filepath"
+        return self.filepath.absolute().parent
+    
+    @property
+    def abspath(self) -> Path:
+        "Returns absolute path of the current file"
+        return self.filepath.absolute()
+    
+    def update_filename(self, new_filename:str, rename_file: bool = False) -> str:
+        "Updates the filepath of the stored file"
+        new_filepath = self.filepath.parent / new_filename
+        if rename_file and self.exists():
+            self.filepath.rename(new_filepath)
+            self.filepath = new_filepath
+        return self.name
+    
+    def is_file(self) -> bool:
+        return self.filepath.is_file()
+
+    def exists(self) -> bool:
+        return self.filepath.is_file()
+    
+    @property
+    def properties(self) -> FileProperties|None:
+        """Returns a dict of properties of the file"""
+        if self.stat:
+            return FileProperties(
+                atime=datetime.fromtimestamp(self.stat.st_atime),
+                mtime=datetime.fromtimestamp(self.stat.st_mtime),
+                ctime=datetime.fromtimestamp(self.stat.st_ctime),
+                size=self.stat.st_size
+            )
+        return None
+    
     def encrypt(self, key: str='') -> bytes|None:
         """Encrypts the content of the file"""
-        content = self.content
+        content = self.read()
         if content:
             fernet = _generate_key(password = key, salt=self._DEFAULT_SALT)
             return fernet.encrypt(content)
@@ -187,22 +172,24 @@ class File:
     
     def decrypt(self, key: str='') -> bytes|None:
         """Decrypts the content of the file"""
-        content = self.content
+        content = self.read()
         if content:
             fernet = _generate_key(password = key, salt=self._DEFAULT_SALT)
             return fernet.decrypt(content)
         else: 
             return None
     
-    @property
-    def content(self) -> bytes | None:
+    def read(self) -> bytes | None:
         if self.exists() is None:
             return None
         else:
             with open(self.filepath, 'rb') as f:
                 return f.read()
         
-        
+    def write(self, content: bytes) -> None:
+        with open(self.filepath, 'wb') as f:
+            f.write(content)
+
 def _generate_key(password: str, salt: bytes) -> Fernet:
     """
     Generates a key from the given password and returns it.
